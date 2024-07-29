@@ -14,6 +14,24 @@ student.get("/", (req, res) => {
     res.send({ Message: error.message });
   }
 });
+student.get("/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      throw new Error("ID is required!");
+    } else {
+      const data = database
+        .prepare("SELECT * FROM students WHERE id=?")
+        .get(id);
+      if (!data) {
+        throw new Error("Student not found!");
+      }
+      res.send(data);
+    }
+  } catch (error) {
+    res.send(error.message);
+  }
+});
 
 student.post("/", (req, res) => {
   try {
